@@ -4,6 +4,7 @@ import {ActivityIndicator, View} from 'react-native';
 import MaterialBottomTab from './src/components/MaterialBottomTab';
 import RootStackScreen from './src/components/RootStackScreen';
 import {AuthContext} from './src/utils/context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
   //   const [isLoading, setIsLoading] = React.useState(true);
@@ -51,19 +52,29 @@ export default function App() {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: (userName, password) => {
+      signIn: async (userName, password) => {
         // setUserToken('sdklf');
         // setIsLoading(false);
         let userToken;
         userToken = null;
         if (userName === 'user' && password === 'pass') {
-          userToken = 'aslkdfh';
+          try {
+            userToken = 'aslkdfh';
+            await AsyncStorage.setItem('userToken', userToken);
+          } catch (e) {
+            console.log(e);
+          }
         }
         dispatch({type: 'LOGIN', id: userName, token: userToken});
       },
-      signOut: () => {
+      signOut: async () => {
         // setUserToken(null);
         // setIsLoading(false);
+        try {
+          await AsyncStorage.removeItem('userToken');
+        } catch (e) {
+          console.log(e);
+        }
         dispatch({type: 'LOGOUT'});
       },
       signUp: () => {
@@ -75,9 +86,16 @@ export default function App() {
   );
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
+      let userToken;
+      userToken = null;
+      try {
+        userToken = await AsyncStorage.getItem('userToken');
+      } catch (e) {
+        console.log(e);
+      }
       //   setIsLoading(false);
-      dispatch({type: 'RETRIEVE_TOKEN', token: 'ASDF'});
+      dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
     }, 1000);
   }, []);
 
