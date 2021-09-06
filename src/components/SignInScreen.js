@@ -7,12 +7,14 @@ import {
   TextInput,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {AuthContext} from '../utils/context';
+import Users from '../models/users';
 
 export default function SignInScreen({navigation}) {
   const [data, setData] = useState({
@@ -20,31 +22,44 @@ export default function SignInScreen({navigation}) {
     password: '',
     check_textInputChange: false,
     secureTextEntry: true,
+    isValidUser: true,
+    isValidPassword: true,
   });
 
   const {signIn} = React.useContext(AuthContext);
 
   const textInputChange = value => {
-    if (value.length !== 0) {
+    if (value.trim().length >= 4) {
       setData({
         ...data,
         userName: value,
         check_textInputChange: true,
+        isValidUser: true,
       });
     } else {
       setData({
         ...data,
         userName: value,
         check_textInputChange: false,
+        isValidUser: false,
       });
     }
   };
 
   const handlePasswordChange = value => {
-    setData({
-      ...data,
-      password: value,
-    });
+    if (value.trim().length >= 8) {
+      setData({
+        ...data,
+        password: value,
+        isValidPassword: true,
+      });
+    } else {
+      setData({
+        ...data,
+        password: value,
+        isValidPassword: false,
+      });
+    }
   };
 
   const updateSecureTextEntry = () => {
@@ -55,7 +70,39 @@ export default function SignInScreen({navigation}) {
   };
 
   const loginHandle = (userName, password) => {
-    signIn(userName, password);
+    const foundUser = Users.filter(item => {
+      return userName === item.username && password === item.password;
+    });
+
+    if (data.userName.length === 0 || data.password.length === 0) {
+      Alert.alert('Wrong input!', 'Username or password can not be empty!', [
+        {text: 'Okay'},
+      ]);
+      return;
+    }
+
+    if (foundUser.length === 0) {
+      Alert.alert('Invalid User!', 'Username or password is incorrect!', [
+        {text: 'Okay'},
+      ]);
+      return;
+    }
+
+    signIn(foundUser);
+  };
+
+  const handleValidUser = value => {
+    if (value.trim().length >= 4) {
+      setData({
+        ...data,
+        isValidUser: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isValidUser: false,
+      });
+    }
   };
 
   return (
@@ -69,15 +116,21 @@ export default function SignInScreen({navigation}) {
         <View style={styles.action}>
           <FontAwesome name="user-o" color="#05375a" size={20} />
           <TextInput
-            placeholder="Your email"
+            placeholder="Your Username"
             style={styles.textInput}
             autoCapitalize="none"
             onChangeText={value => textInputChange(value)}
+            onEndEditing={e => handleValidUser(e.nativeEvent.text)} // onEndEditing doesnt provide value as onChangeText so you have to use e.nativeEvent.text
           />
           {data.check_textInputChange ? (
             <Feather name="check-circle" color="green" size={20} />
           ) : null}
         </View>
+        {data.isValidUser ? null : (
+          <Text style={styles.errorMsg}>
+            Username must be 4 characters long.
+          </Text>
+        )}
 
         <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
         <View style={styles.action}>
@@ -97,6 +150,11 @@ export default function SignInScreen({navigation}) {
             )}
           </TouchableOpacity>
         </View>
+        {data.isValidPassword ? null : (
+          <Text style={styles.errorMsg}>
+            Password must be 8 characters long.
+          </Text>
+        )}
 
         <View style={styles.button}>
           <TouchableOpacity
