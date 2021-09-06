@@ -12,11 +12,14 @@ import {
 import LinearGradient from 'react-native-linear-gradient';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useTheme} from 'react-native-paper';
 
 import {AuthContext} from '../utils/context';
 import Users from '../models/users';
+import {color} from 'react-native-reanimated';
 
 export default function SignInScreen({navigation}) {
+  const {colors} = useTheme();
   const [data, setData] = useState({
     userName: '',
     password: '',
@@ -111,13 +114,14 @@ export default function SignInScreen({navigation}) {
       <View style={styles.header}>
         <Text style={styles.text_header}>Welcome!</Text>
       </View>
-      <View style={styles.footer}>
-        <Text style={styles.text_footer}>Email</Text>
+      <View style={[styles.footer, {backgroundColor: colors.background}]}>
+        <Text style={[styles.text_footer, {color: colors.text}]}>Username</Text>
         <View style={styles.action}>
-          <FontAwesome name="user-o" color="#05375a" size={20} />
+          <FontAwesome name="user-o" color={colors.text} size={20} />
           <TextInput
             placeholder="Your Username"
-            style={styles.textInput}
+            placeholderTextColor="#666"
+            style={[styles.textInput, {color: colors.text}]}
             autoCapitalize="none"
             onChangeText={value => textInputChange(value)}
             onEndEditing={e => handleValidUser(e.nativeEvent.text)} // onEndEditing doesnt provide value as onChangeText so you have to use e.nativeEvent.text
@@ -132,12 +136,15 @@ export default function SignInScreen({navigation}) {
           </Text>
         )}
 
-        <Text style={[styles.text_footer, {marginTop: 35}]}>Password</Text>
+        <Text style={[styles.text_footer, {marginTop: 35, color: colors.text}]}>
+          Password
+        </Text>
         <View style={styles.action}>
-          <FontAwesome name="lock" color="#05375a" size={20} />
+          <FontAwesome name="lock" color={colors.text} size={20} />
           <TextInput
             placeholder="Your password"
-            style={styles.textInput}
+            placeholderTextColor="#666"
+            style={[styles.textInput, {color: colors.text}]}
             autoCapitalize="none"
             secureTextEntry={data.secureTextEntry}
             onChangeText={value => handlePasswordChange(value)}

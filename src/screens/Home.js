@@ -1,7 +1,11 @@
 import React from 'react';
-import {View, Text, Button} from 'react-native';
+import {View, Text, Button, StatusBar} from 'react-native';
+import {useTheme} from '@react-navigation/native';
 
 export default function Home({navigation}) {
+  const {colors} = useTheme();
+  const theme = useTheme();
+
   return (
     <View
       style={{
@@ -9,7 +13,12 @@ export default function Home({navigation}) {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text>Home Screen</Text>
+      <StatusBar
+        barStyle={theme.dark ? 'light-content' : 'dark-content'}
+        // backgroundColor="orange"
+        // hidden={true}
+      />
+      <Text style={{color: colors.text}}>Home Screen</Text>
       <Button
         title="Go to Details"
         onPress={() => {

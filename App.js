@@ -1,20 +1,56 @@
-import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect, useReducer} from 'react';
+import {
+  NavigationContainer,
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
+} from '@react-navigation/native';
+import React, {useEffect, useReducer, useState} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import MaterialBottomTab from './src/components/MaterialBottomTab';
 import RootStackScreen from './src/components/RootStackScreen';
 import {AuthContext} from './src/utils/context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import {
+  Provider as PaperProvider,
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperDefaultTheme,
+} from 'react-native-paper';
+
 export default function App() {
   //   const [isLoading, setIsLoading] = React.useState(true);
   //   const [userToken, setUserToken] = React.useState(null);
+
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   const initialLoginState = {
     isLoading: true,
     userName: null,
     userToken: null,
   };
+
+  const CustomDefaultTheme = {
+    ...NavigationDefaultTheme,
+    ...PaperDefaultTheme,
+    colors: {
+      ...NavigationDefaultTheme.colors,
+      ...PaperDefaultTheme.colors,
+      background: '#fff',
+      text: '#333',
+    },
+  };
+
+  const CustomDarkTheme = {
+    ...NavigationDarkTheme,
+    ...PaperDarkTheme,
+    colors: {
+      ...NavigationDarkTheme.colors,
+      ...PaperDarkTheme.colors,
+      background: '#333',
+      text: '#fff',
+    },
+  };
+
+  const theme = isDarkTheme ? CustomDarkTheme : CustomDefaultTheme;
 
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -79,6 +115,9 @@ export default function App() {
         // setUserToken('sdklf');
         // setIsLoading(false);
       },
+      toggleTheme: () => {
+        setIsDarkTheme(isDarkTheme => !isDarkTheme);
+      },
     }),
     [],
   );
@@ -106,16 +145,18 @@ export default function App() {
   }
 
   return (
-    <AuthContext.Provider value={authContext}>
-      <NavigationContainer>
-        <View style={{flex: 1}}>
-          {loginState.userToken !== null ? (
-            <MaterialBottomTab />
-          ) : (
-            <RootStackScreen />
-          )}
-        </View>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <PaperProvider theme={theme}>
+      <AuthContext.Provider value={authContext}>
+        <NavigationContainer theme={theme}>
+          <View style={{flex: 1}}>
+            {loginState.userToken !== null ? (
+              <MaterialBottomTab />
+            ) : (
+              <RootStackScreen />
+            )}
+          </View>
+        </NavigationContainer>
+      </AuthContext.Provider>
+    </PaperProvider>
   );
 }
