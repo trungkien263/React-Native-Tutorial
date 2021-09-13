@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -16,8 +16,42 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
+import ImagePicker from 'react-native-image-crop-picker';
+
 export default function EditProfile() {
   const {colors} = useTheme();
+  const [imageSource, setImage] = useState(
+    'https://vcdn1-giaitri.vnecdn.net/2019/12/28/tu-du8-1577517691.jpg?w=1200&h=0&q=100&dpr=1&fit=crop&s=LBOlZmAoT8qtvMpcmPiwNQ',
+  );
+
+  const bs = React.createRef();
+  const fall = new Animated.Value(1);
+
+  const takePhotoFromCamera = () => {
+    ImagePicker.openCamera({
+      width: 300,
+      height: 400,
+      cropping: true,
+      compressImageQuality: 0.7,
+    }).then(image => {
+      console.log(image);
+      setImage(image.path);
+      bs.current.snapTo(1);
+    });
+  };
+
+  const choosePhotoFromLibrary = () => {
+    ImagePicker.openPicker({
+      compressImageMaxHeight: 300,
+      compressImageMaxWidth: 300,
+      cropping: true,
+      compressImageQuality: 0.7,
+    }).then(image => {
+      console.log(image);
+      setImage(image.path);
+      bs.current.snapTo(1);
+    });
+  };
 
   const renderInner = () => (
     <View style={styles.panel}>
@@ -25,10 +59,14 @@ export default function EditProfile() {
         <Text style={styles.panelTitle}>Upload Photo</Text>
         <Text style={styles.panelSubtitle}>Choose Your Profile Picture</Text>
       </View>
-      <TouchableOpacity style={styles.panelButton}>
+      <TouchableOpacity
+        style={styles.panelButton}
+        onPress={takePhotoFromCamera}>
         <Text style={styles.panelButtonTitle}>Take Photo</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.panelButton}>
+      <TouchableOpacity
+        style={styles.panelButton}
+        onPress={choosePhotoFromLibrary}>
         <Text style={styles.panelButtonTitle}>Choose From Library</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -46,9 +84,6 @@ export default function EditProfile() {
       </View>
     </View>
   );
-
-  const bs = React.createRef();
-  const fall = new Animated.Value(1);
 
   return (
     <View style={styles.container}>
@@ -78,7 +113,7 @@ export default function EditProfile() {
                 alignItems: 'center',
               }}>
               <ImageBackground
-                source={require('../assets/tzuyu-profile.jpg')}
+                source={{uri: imageSource}}
                 style={{
                   width: 100,
                   height: 100,

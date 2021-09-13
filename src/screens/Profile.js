@@ -1,10 +1,10 @@
 import React from 'react';
-import {Image, SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import {
   Avatar,
-  Title,
   Caption,
   Text,
+  Title,
   TouchableRipple,
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
