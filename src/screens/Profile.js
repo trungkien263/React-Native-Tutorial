@@ -9,7 +9,25 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import Share from 'react-native-share';
+import files from '../assets/filesBase64';
+
 export default function Profile() {
+  const myCustomShare = async () => {
+    const shareOptions = {
+      message: 'This is a test msg',
+      url: files.image, // convert to base64 standard first
+      //   urls: [files.image, files.pdf],
+    };
+
+    try {
+      const ShareResponse = await Share.open(shareOptions);
+      console.log(JSON.stringify(ShareResponse));
+    } catch (error) {
+      console.log('Error =>', error);
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -143,7 +161,7 @@ export default function Profile() {
           </View>
         </TouchableRipple>
 
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={myCustomShare}>
           <View style={styles.menuItem}>
             {/* <Image
               source={require('../assets/location.png')}
@@ -155,12 +173,12 @@ export default function Profile() {
               }}
             /> */}
             <Icon
-              name="settings-outline"
+              name="share-variant"
               size={20}
               color="#ff6347"
               style={{marginTop: 4, marginRight: 10}}
             />
-            <Text style={{color: '#666'}}>Settings</Text>
+            <Text style={{color: '#666'}}>Share</Text>
           </View>
         </TouchableRipple>
       </View>
