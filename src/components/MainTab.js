@@ -9,100 +9,138 @@ import Home from '../screens/Home';
 import Explore from '../screens/Explore';
 import Profile from '../screens/Profile';
 import EditProfile from '../screens/EditProfile';
-import {useTheme} from 'react-native-paper';
+import {Avatar, useTheme} from 'react-native-paper';
+import {View} from 'react-native';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
 const ProfileStack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
-const MainTabScreen = () => (
-  <Tab.Navigator initialRouteName="Home" activeColor="#fff">
-    <Tab.Screen
-      name="Home"
-      component={HomeStackScreen}
-      options={{
-        tabBarLabel: 'Home',
-        tabBarColor: '#009387',
-        tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="home" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Details"
-      component={DetailsStackScreen}
-      options={{
-        tabBarLabel: 'Details',
-        tabBarColor: 'orange',
-        tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons
-            name="card-account-details"
-            color={color}
-            size={26}
-          />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Profile"
-      component={ProfileStackScreen}
-      options={{
-        tabBarLabel: 'Profile',
-        tabBarColor: 'green',
-        tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons name="account" color={color} size={26} />
-        ),
-      }}
-    />
-    <Tab.Screen
-      name="Explore"
-      component={Explore}
-      options={{
-        tabBarLabel: 'Explore',
-        tabBarColor: 'pink',
-        tabBarIcon: ({color}) => (
-          <MaterialCommunityIcons
-            name="format-list-checkbox"
-            color={color}
-            size={26}
-          />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+const MainTabScreen = () => {
+  return (
+    <Tab.Navigator initialRouteName="Home" activeColor="#fff">
+      <Tab.Screen
+        name="Home"
+        component={HomeStackScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarColor: '#FF6347',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="home" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Details"
+        component={DetailsStackScreen}
+        options={{
+          tabBarLabel: 'Details',
+          tabBarColor: 'orange',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons
+              name="card-account-details"
+              color={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Profile"
+        component={ProfileStackScreen}
+        options={{
+          tabBarLabel: 'Profile',
+          tabBarColor: 'green',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons name="account" color={color} size={26} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Explore"
+        component={Explore}
+        options={{
+          tabBarLabel: 'Explore',
+          tabBarColor: 'pink',
+          tabBarIcon: ({color}) => (
+            <MaterialCommunityIcons
+              name="format-list-checkbox"
+              color={color}
+              size={26}
+            />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+};
 
-const HomeStackScreen = ({navigation}) => (
-  <HomeStack.Navigator
-    screenOptions={{
-      headerStyle: {
-        backgroundColor: '#009387',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontStyle: 'italic',
-      },
-    }}>
-    <HomeStack.Screen
-      name="Home"
-      component={Home}
-      options={{
-        title: 'Home Screen',
-        headerLeft: () => (
-          <Icon.Button
-            name="menu"
-            size={30}
-            backgroundColor="#009387"
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          />
-        ),
-      }}
-    />
-  </HomeStack.Navigator>
-);
+const HomeStackScreen = ({navigation}) => {
+  const {colors} = useTheme();
+  return (
+    <HomeStack.Navigator
+      screenOptions={{
+        headerStyle: {
+          backgroundColor: colors.background,
+          // shadowColor: '#fff', // ios
+          elevation: 0, // android
+        },
+        headerTintColor: colors.text,
+        headerTitleStyle: {
+          alignSelf: 'auto',
+          fontSize: 18,
+        },
+      }}>
+      <HomeStack.Screen
+        name="Home"
+        component={Home}
+        options={{
+          title: 'Home Screen',
+          headerLeft: () => (
+            <View style={{marginLeft: 10}}>
+              <Icon.Button
+                name="menu"
+                size={30}
+                backgroundColor={colors.background}
+                color={colors.text}
+                onPress={() => {
+                  navigation.openDrawer();
+                }}
+              />
+            </View>
+          ),
+          headerRight: () => (
+            <View
+              style={{
+                flexDirection: 'row',
+                marginRight: 10,
+              }}>
+              <Icon.Button
+                name="ios-search"
+                size={30}
+                backgroundColor={colors.background}
+                color={colors.text}
+                onPress={() => {}}
+              />
+              <TouchableOpacity
+                style={{marginTop: 8, marginRight: 10}}
+                onPress={() => {
+                  navigation.navigate('Profile');
+                }}>
+                <Avatar.Image
+                  source={require('../assets/tzuyu.jpg')}
+                  size={30}
+                />
+              </TouchableOpacity>
+            </View>
+          ),
+        }}
+      />
+    </HomeStack.Navigator>
+  );
+};
 
 const DetailsStackScreen = ({navigation}) => (
   <DetailsStack.Navigator
