@@ -12,6 +12,7 @@ import EditProfile from '../screens/EditProfile';
 import {Avatar, useTheme} from 'react-native-paper';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
+import ProductInfo from '../screens/ProductInfo';
 
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
@@ -170,6 +171,7 @@ const DetailsStackScreen = ({navigation}) => (
         ),
       }}
     />
+    <DetailsStack.Screen name="ProductInfo" component={ProductInfo} />
   </DetailsStack.Navigator>
 );
 
