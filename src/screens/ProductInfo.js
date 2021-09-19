@@ -16,7 +16,7 @@ export default function ProductInfo({route, navigation}) {
 
   const showToast = () => {
     ToastAndroid.showWithGravityAndOffset(
-      'Updated Successfully !',
+      'Update Successfully !',
       ToastAndroid.LONG,
       ToastAndroid.TOP,
       50,
@@ -90,7 +90,13 @@ export default function ProductInfo({route, navigation}) {
       </View>
 
       <TouchableOpacity
-        onPress={updateData}
+        onPress={() => {
+          if (data.name === name && data.description === description) {
+            alert('Nothing change !!!');
+          } else {
+            updateData();
+          }
+        }}
         style={{
           marginTop: 20,
           backgroundColor: 'orange',
@@ -100,6 +106,21 @@ export default function ProductInfo({route, navigation}) {
           alignItems: 'center',
         }}>
         <Text style={{color: '#FFF', fontWeight: 'bold'}}>Update</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+        style={{
+          marginTop: 20,
+          backgroundColor: 'red',
+          padding: 10,
+          width: 200,
+          borderRadius: 8,
+          alignItems: 'center',
+        }}>
+        <Text style={{color: '#FFF', fontWeight: 'bold'}}>Go Back</Text>
       </TouchableOpacity>
     </View>
   );
