@@ -13,6 +13,7 @@ import {Avatar, useTheme} from 'react-native-paper';
 import {View} from 'react-native';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import ProductInfo from '../screens/ProductInfo';
+import AddProduct from '../screens/AddProduct';
 
 const HomeStack = createStackNavigator();
 const DetailsStack = createStackNavigator();
@@ -169,9 +170,20 @@ const DetailsStackScreen = ({navigation}) => (
             }}
           />
         ),
+        headerRight: () => (
+          <Icon.Button
+            name="add"
+            size={30}
+            backgroundColor="orange"
+            onPress={() => {
+              navigation.navigate('AddProduct');
+            }}
+          />
+        ),
       }}
     />
     <DetailsStack.Screen name="ProductInfo" component={ProductInfo} />
+    <DetailsStack.Screen name="AddProduct" component={AddProduct} />
   </DetailsStack.Navigator>
 );
 

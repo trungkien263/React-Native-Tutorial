@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {
   Alert,
-  ScrollView,
+  RefreshControl,
   Text,
   ToastAndroid,
   TouchableOpacity,
@@ -12,6 +12,7 @@ import {SwipeListView} from 'react-native-swipe-list-view';
 
 export default function Details({navigation, route}) {
   const [product, setProduct] = useState();
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [isDeleted, setIsDeleted] = useState(false);
 
@@ -21,6 +22,10 @@ export default function Details({navigation, route}) {
 
   const showDelSuccessfulToast = () => {
     ToastAndroid.show('Delete Successful !!!', ToastAndroid.LONG);
+  };
+
+  const showRefreshingToast = () => {
+    ToastAndroid.show('Refreshing...', ToastAndroid.SHORT);
   };
 
   const deleteItem = id => {
@@ -42,6 +47,15 @@ export default function Details({navigation, route}) {
       })
       .catch(error => console.warn(error));
   }, [route.params?.isUpdated, isDeleted]);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setIsDeleted(!isDeleted);
+    showRefreshingToast();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 1000);
+  };
 
   const Item = props => {
     const {data} = props;
@@ -130,6 +144,9 @@ export default function Details({navigation, route}) {
       renderHiddenItem={(data, rowMap) => <RenderHiddenItem data={data.item} />}
       leftOpenValue={75}
       rightOpenValue={-75}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
     />
   );
 }
